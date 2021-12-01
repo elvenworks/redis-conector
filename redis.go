@@ -51,11 +51,9 @@ func (r *Redis) SetMessage(key string, message interface{}) error {
 		Message: message,
 	}
 
-	actions := actions.NewRedisActions(r.Config)
+	r.actions = actions.NewRedisActions(r.Config)
 
-	defer actions.RedisClient.Close()
-
-	r.actions = actions
+	defer r.actions.Close()
 
 	err := r.actions.SetMessage(inputMessage)
 
@@ -72,11 +70,9 @@ func (r *Redis) GetMessage(key string) (string, error) {
 		Key: key,
 	}
 
-	actions := actions.NewRedisActions(r.Config)
+	r.actions = actions.NewRedisActions(r.Config)
 
-	defer actions.RedisClient.Close()
-
-	r.actions = actions
+	defer r.actions.Close()
 
 	message, err := r.actions.GetMessage(inputMessage)
 

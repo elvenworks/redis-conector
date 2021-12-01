@@ -17,5 +17,5 @@ func (mock MockRedis) SetMessage(key string, message interface{}) error {
 func (mock MockRedis) GetMessage(key string) (string, error) {
 	args := mock.Called(key)
 
-	return args.Get(0).(string), args.Error(0)
+	return args.Get(0).(string), args.Error(1)
 }

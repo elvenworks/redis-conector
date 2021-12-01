@@ -56,3 +56,8 @@ func (c *redisClient) GetMessage(m domain.InputMessage) (string, error) {
 	return redisResponse, nil
 
 }
+
+func (c *redisClient) Close() error {
+
+	return c.RedisClient.Close()
+}

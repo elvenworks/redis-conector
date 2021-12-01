@@ -20,3 +20,9 @@ func (mock MockRedisClient) GetMessage(m domain.InputMessage) (string, error) {
 
 	return args.Get(0).(string), args.Error(1)
 }
+
+func (mock MockRedisClient) Close() error {
+	args := mock.Called()
+
+	return args.Error(0)
+}
