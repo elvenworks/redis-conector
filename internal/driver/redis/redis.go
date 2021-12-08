@@ -9,3 +9,10 @@ func RedisNewClient(config *redis.Options) *redis.Client {
 	return redisClient
 
 }
+
+func RedisNewClusterClient(clusterConfig *redis.ClusterOptions) *redis.ClusterClient {
+
+	redisClusterClient := redis.NewClusterClient(clusterConfig)
+
+	return redisClusterClient
+}

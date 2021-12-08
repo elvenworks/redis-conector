@@ -24,6 +24,7 @@ type Redis struct {
 }
 
 func InitRedis(config InputConfig) *Redis {
+
 	RedisConfig := Redis{
 		Config: &redis.Options{
 			Addr:        config.Host,
