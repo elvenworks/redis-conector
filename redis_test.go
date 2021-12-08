@@ -37,7 +37,12 @@ func TestInitRedis(t *testing.T) {
 					MaxRetries:  1,
 					DialTimeout: time.Duration(1) * time.Second,
 				},
-				actions: nil,
+				ConfigCluster: &redis.ClusterOptions{
+					MaxRetries:  1,
+					DialTimeout: time.Duration(1) * time.Second,
+				},
+				actions:        nil,
+				clusterActions: nil,
 			},
 		},
 		{
@@ -60,7 +65,14 @@ func TestInitRedis(t *testing.T) {
 					DialTimeout: time.Duration(1) * time.Second,
 					TLSConfig:   &tls.Config{},
 				},
-				actions: nil,
+				ConfigCluster: &redis.ClusterOptions{
+					Password:    "1",
+					MaxRetries:  1,
+					DialTimeout: time.Duration(1) * time.Second,
+					TLSConfig:   &tls.Config{},
+				},
+				actions:        nil,
+				clusterActions: nil,
 			},
 		},
 	}
@@ -161,6 +173,99 @@ func TestRedis_GetMessage(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("Redis.GetMessage() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRedis_ClusterSetMessage(t *testing.T) {
+	type fields struct {
+		ConfigCluster  *redis.ClusterOptions
+		clusterActions actions.MockClusterClient
+	}
+	type args struct {
+		key     string
+		message interface{}
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Test",
+			args: args{
+				key:     "redis",
+				message: "redis",
+			},
+			fields: fields{
+				ConfigCluster:  &redis.ClusterOptions{},
+				clusterActions: actions.MockClusterClient{},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			tt.fields.clusterActions.On("SetMessage", tt.fields.ConfigCluster).Return(tt.wantErr)
+
+			r := &Redis{
+				ConfigCluster:  tt.fields.ConfigCluster,
+				clusterActions: tt.fields.clusterActions,
+			}
+			if err := r.ClusterSetMessage(tt.args.key, tt.args.message); (err != nil) != tt.wantErr {
+				t.Errorf("Redis.ClusterSetMessage() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestRedis_ClusterGetMessage(t *testing.T) {
+	type fields struct {
+		ConfigCluster  *redis.ClusterOptions
+		clusterActions actions.MockClusterClient
+	}
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "Test",
+			fields: fields{
+				ConfigCluster:  &redis.ClusterOptions{},
+				clusterActions: actions.MockClusterClient{},
+			},
+			args: args{
+				key: "redis",
+			},
+			want:    "",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			tt.fields.clusterActions.On("GetMessage", tt.fields.ConfigCluster).Return(tt.wantErr)
+
+			r := &Redis{
+				ConfigCluster:  tt.fields.ConfigCluster,
+				clusterActions: tt.fields.clusterActions,
+			}
+			got, err := r.ClusterGetMessage(tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Redis.ClusterGetMessage() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("Redis.ClusterGetMessage() = %v, want %v", got, tt.want)
 			}
 		})
 	}
