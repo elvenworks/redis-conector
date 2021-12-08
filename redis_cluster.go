@@ -24,7 +24,7 @@ type RedisCluster struct {
 
 func InitRedisCluster(config InputClusterConfig) *RedisCluster {
 
-	RedisClusterConfig := Redis{
+	RedisClusterConfig := RedisCluster{
 		ConfigCluster: &redis.ClusterOptions{
 			Addrs:       config.Hosts,
 			Username:    config.User,

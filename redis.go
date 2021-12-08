@@ -19,10 +19,8 @@ type InputConfig struct {
 }
 
 type Redis struct {
-	Config         *redis.Options
-	ConfigCluster  *redis.ClusterOptions
-	actions        actions.IRedisActions
-	clusterActions actions.IRedisClusterActions
+	Config  *redis.Options
+	actions actions.IRedisActions
 }
 
 func InitRedis(config InputConfig) *Redis {
