@@ -45,6 +45,7 @@ func TestInitRedisCluster(t *testing.T) {
 					Password:   "1",
 					MaxRetries: 1,
 					Timeout:    time.Duration(1) * time.Second,
+					TLS:        true,
 				},
 			},
 			want: &RedisCluster{

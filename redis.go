@@ -16,6 +16,7 @@ type InputConfig struct {
 	DB         int
 	MaxRetries int
 	Timeout    time.Duration
+	TLS        bool
 }
 
 type Redis struct {
@@ -36,7 +37,7 @@ func InitRedis(config InputConfig) *Redis {
 		},
 	}
 
-	if config.Password != "" {
+	if config.TLS {
 		RedisConfig.Config.TLSConfig = &tls.Config{}
 	}
 
