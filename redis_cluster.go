@@ -15,6 +15,7 @@ type InputClusterConfig struct {
 	Password   string
 	MaxRetries int
 	Timeout    time.Duration
+	TLS        bool
 }
 
 type RedisCluster struct {
@@ -34,7 +35,7 @@ func InitRedisCluster(config InputClusterConfig) *RedisCluster {
 		},
 	}
 
-	if config.Password != "" {
+	if config.TLS {
 		RedisClusterConfig.ConfigCluster.TLSConfig = &tls.Config{}
 	}
 

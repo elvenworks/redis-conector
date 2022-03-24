@@ -49,6 +49,7 @@ func TestInitRedis(t *testing.T) {
 					DB:         1,
 					MaxRetries: 1,
 					Timeout:    time.Duration(1) * time.Second,
+					TLS:        true,
 				},
 			},
 			want: &Redis{
